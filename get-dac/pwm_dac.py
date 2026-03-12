@@ -3,7 +3,7 @@ import time
 class PWM_DAC:
     def __init__(self, gpio_pin, pwm_frequency, dynamic_range, verbose = False):
        
-        self.gpio_bits = gpio_bits
+        self.gpio_bits = gpio_pin
         self.dynamic_range = dynamic_range
         self.verbose = verbose
         

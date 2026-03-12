@@ -21,7 +21,7 @@ class MCP4725:
             print("На вход ЦАП можно подавать только целые числа")
 
         if not (0 <= number <= 4095):
-            print("Число выходит за разраядность MCP4752 (12 бит)")
+            print("Число выходит за разрядность MCP4752 (12 бит)")
 
         first_byte = self.wm | self.pds | number >> 8
         second_byte = number & 0xFF
@@ -35,12 +35,12 @@ class MCP4725:
             print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {dynamic_range:.2f} В)")
             print("Устанавлниваем 0.0 В")
             return 0
-    number = int(voltage / dynamic_range * 255)
+    number = int(voltage / dynamic_range * 4095)
     self.set_number(number)
 
 if __name__ == "__main__":
     try:
-        dac = PWM_DAC(12, 500, 3.290, True)
+        dac =  MCP4725(3.3 , 5.11 True)
         
         while True:
             try:
