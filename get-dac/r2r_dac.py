@@ -12,21 +12,21 @@ class R2R_DAC:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.gpio_bits, GPIO.OUT, initial = 0)
 
-def deinit(self):
-    GPIO.output(self.gpio_bits, 0)
-    GPIO.cleanup()
+    def deinit(self):
+        GPIO.output(self.gpio_bits, 0)
+        GPIO.cleanup()
 
-def set_number(self, number):
-    signal = [int(bit) for bit in bin(number)[2:].zfill(8)]
-    print(signal)
-    for i in range(len(signal)):
-        GPIO.output(self.gpio_bits[i], signal[i])
+    def set_number(self, number):
+        signal = [int(bit) for bit in bin(number)[2:].zfill(8)]
+        print(signal)
+        for i in range(len(signal)):
+            GPIO.output(self.gpio_bits[i], signal[i])
 
-def set_voltage(self, voltage):
-    if not (0.0 <= voltage <= dynamic_range):
-        print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {dynamic_range:.2f} В)")
-        print("Устанавлниваем 0.0 В")
-        return 0
+    def set_voltage(self, voltage):
+        if not (0.0 <= voltage <= dynamic_range):
+            print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {dynamic_range:.2f} В)")
+            print("Устанавлниваем 0.0 В")
+            return 0
     number = int(voltage / dynamic_range * 255)
     self.set_number(number)
     

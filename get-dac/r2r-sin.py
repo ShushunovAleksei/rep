@@ -9,13 +9,13 @@ sampling_frequency = 1000
 if __name__ == "__main__":
     try:
         dac = R2R_DAC([16, 20, 21, 25, 26, 17, 27, 22], 3.183, True)
-        
+        start_time = time.time()
         while True:
-            try:
-                voltage = float(input("Введите напряжение в Вольтах: "))
-                dac.set_voltage(voltage)
+        
+            current_time = time.time() - start_time 
+            signal = amplitude*sg.get_sin_wave_amplitude(signal_frequency, current_time)
+            dac.set_voltage(signal)
+            sg.wait_for_sampling_periods(sampling_frequency)
 
-            except ValueError:
-                print("Вы ввели не число. Попробуйте ещё раз\n")
     finally:
         dac.deinit()

@@ -1,7 +1,5 @@
-
-
 import smbus
-
+import time
 class MCP4725:
     def __init__(self, dynamic_range, address=0x61, verbose = True):
         self.bus = smbus.SMBus(1)
@@ -37,7 +35,7 @@ class MCP4725:
             return 0
     number = int(voltage / dynamic_range * 4095)
     self.set_number(number)
-
+    
 if __name__ == "__main__":
     try:
         dac =  MCP4725(3.3 , 5.11 True)
