@@ -40,3 +40,4 @@ if __name__ == "__main__":
             except ValueError:
                 print("Вы ввели не число. Попробуйте еще раз\n")
     finally:
+        dac.deinit()

@@ -2,7 +2,7 @@ import time
 import mcp4725_driver as mcp
 import signal_generator as sg
 
-amplitude = 5.0
+amplitude = 5.2
 signal_frequency = 10
 sampling_frequency = 1000
 
@@ -13,6 +13,6 @@ try:
         current_time = time.time() - start_time 
         signal = amplitude*sg.get_sin_wave_amplitude(signal_frequency, current_time)
         dac.set_voltage(signal)
-        sg.wait_for_sampling_periods(sampling_frequency)
+        sg.wait_for_sampling_period(sampling_frequency)
 finally:
     dac.deinit()
