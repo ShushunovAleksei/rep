@@ -1,52 +1,18 @@
-import smbus
 import time
-class MCP4725:
-    def __init__(self, dynamic_range, address=0x61, verbose = True):
-        self.bus = smbus.SMBus(1)
-        
-        self.address = address
-        self.wm = 0x00
-        self.pds = 0x00
-        
-        self.verbose = verbose
-        self.dynamic_range = dynamic_range
+import mcp4725_driver as mcp
+import signal_generator as sg
 
-    def deinit(self):
-        self.bus.close()
-    
-    def set_number(self, number):
-        if not isinstance(number, int):
-            print("На вход ЦАП можно подавать только целые числа")
+amplitude = 5.0
+signal_frequency = 10
+sampling_frequency = 1000
 
-        if not (0 <= number <= 4095):
-            print("Число выходит за разрядность MCP4752 (12 бит)")
-
-        first_byte = self.wm | self.pds | number >> 8
-        second_byte = number & 0xFF
-        self.bus.write_byte_data(0x61, first_byte, second_byte)
-
-        if self.verbose:
-            print(f"Число: {number}, отправленные по I2C данные: [0x{(self.address << 1):02X}, 0x{first_byte:02X}, 0x{second_byte:02X}]\n")
-
-    def set_voltage(self, voltage):
-        if not (0.0 <= voltage <= dynamic_range):
-            print(f"Напряжение выходит за динамический диапазон ЦАП (0.00 - {dynamic_range:.2f} В)")
-            print("Устанавлниваем 0.0 В")
-            return 0
-    number = int(voltage / dynamic_range * 4095)
-    self.set_number(number)
-    
-if __name__ == "__main__":
-    try:
-        dac =  MCP4725(3.3 , 5.11 True)
-        
-        while True:
-            try:
-                voltage = float(input("Введите напряжение в Вольтах: "))
-                dac.set_voltage(voltage)
-
-            except ValueError:
-                print("Вы ввели не число. Попробуйте ещё раз\n")
-
-    finally:
-        dac.deinit()
+try:
+    dac = mcp.MCP4725(amplitude)
+    start_time = time.time()
+    while True:
+        current_time = time.time() - start_time 
+        signal = amplitude*sg.get_sin_wave_amplitude(signal_frequency, current_time)
+        dac.set_voltage(signal)
+        sg.wait_for_sampling_periods(sampling_frequency)
+finally:
+    dac.deinit()
